@@ -1,7 +1,7 @@
 "use client";
 import "./globals.css";
 import styles from "./page.module.css";
-import { SetStateAction, useCallback, useMemo, useState } from "react";
+import { SetStateAction, useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Button, Nav } from "@douyinfe/semi-ui";
@@ -19,6 +19,7 @@ import {
     IconVideoListStroked,
     IconHome, IconSetting,
 } from "@douyinfe/semi-icons";
+import Image from "next/image";
 
 export default function RootLayout({
     children,
@@ -35,7 +36,13 @@ export default function RootLayout({
     const [openKeys, setOpenKeys] = useState(initOpenKeys);
     const [selectedKeys, setSelectedKeys] = useState<any>([pathname.slice(1)]);
     const [isCollapsed, setIsCollapsed] = useState(false);
-    const [mode, setMode] = useState("light");
+    const [mode, setMode] = useState(typeof window !== 'undefined' && localStorage.getItem("mode") || "light");
+    useEffect(() => {
+        localStorage.setItem("mode", mode);
+        if (mode === "dark") {
+            document.body.setAttribute("theme-mode", "dark");
+        }
+    }, [mode]);
     let navStyle = isCollapsed
         ? { height: "100%", overflow: "visible" }
         : { height: "100%" };
@@ -254,7 +261,7 @@ export default function RootLayout({
                                     // <IconSemiLogo
                                     //     style={{ height: "36px", fontSize: 36 }}
                                     // />
-                                    <img src='logo.png' alt='{}'></img>
+                                    <Image src='logo.png' alt='{}' height={10} width={20}></Image>
                                 }
                                 style={{ justifyContent: "flex-start" }}
                                 text="BILIUP"
